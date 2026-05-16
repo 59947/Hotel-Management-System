@@ -1,0 +1,44 @@
+package Booking;
+
+import javax.swing.*;
+import java.awt.*;
+import java.util.ArrayList;
+
+public class BookingForm {
+
+    JComboBox<Integer> customerBox;
+    JComboBox<Integer> roomBox;
+
+    public BookingForm(JFrame frame) {
+
+        JLabel cLabel = new JLabel("Customer:");
+        cLabel.setBounds(80, 40, 200, 30);
+        cLabel.setForeground(Color.WHITE);
+        frame.add(cLabel);
+
+        customerBox = new JComboBox<>(new Integer[]{1, 2, 3});
+        customerBox.setBounds(450, 40, 200, 30);
+        frame.add(customerBox);
+
+        JLabel rLabel = new JLabel("Room:");
+        rLabel.setBounds(80, 90, 200, 30);
+        rLabel.setForeground(Color.WHITE);
+        frame.add(rLabel);
+
+        roomBox = new JComboBox<>(new Integer[]{101, 102, 103});
+        roomBox.setBounds(450, 90, 200, 30);
+        frame.add(roomBox);
+
+        JButton btn = new JButton("Confirm Booking");
+        btn.setBounds(300, 350, 200, 40);
+        frame.add(btn);
+
+        btn.addActionListener(e -> {
+            BookingService service = new BookingService();
+            service.createBooking(
+                    (Integer) customerBox.getSelectedItem(),
+                    (Integer) roomBox.getSelectedItem()
+            );
+        });
+    }
+}

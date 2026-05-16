@@ -1,0 +1,31 @@
+package Room;
+
+import javax.swing.*;
+
+public class RoomForm {
+
+    JTextField id;
+    JComboBox<String> type;
+
+    public RoomForm(JFrame frame) {
+
+        id = new JTextField();
+        id.setBounds(200, 50, 200, 30);
+        frame.add(id);
+
+        type = new JComboBox<>(new String[]{"Single", "Double", "Suite"});
+        type.setBounds(200, 100, 200, 30);
+        frame.add(type);
+
+        JButton btn = new JButton("Save");
+        btn.setBounds(200, 200, 120, 40);
+        frame.add(btn);
+
+        btn.addActionListener(e -> {
+            RoomService.saveRoom(
+                    Integer.parseInt(id.getText()),
+                    (String) type.getSelectedItem()
+            );
+        });
+    }
+}

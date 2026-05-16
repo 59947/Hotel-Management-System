@@ -1,0 +1,22 @@
+package GraphicalUserInterface;
+
+import javax.swing.*;
+
+public class HotelGUI {
+
+    private JFrame frame;
+
+    public HotelGUI() {
+        frame = new JFrame();
+
+        new FrameSetup(frame);
+        new BackgroundPanel(frame);
+        new ButtonPanel(frame);
+
+        frame.setVisible(true);
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(HotelGUI::new);
+    }
+}

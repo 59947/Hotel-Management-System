@@ -1,0 +1,19 @@
+package GraphicalUserInterface;
+
+import javax.swing.*;
+
+public class ExitHandler {
+
+    public void exit() {
+        int choice = JOptionPane.showConfirmDialog(
+                null,
+                "Do you want to EXIT?",
+                "Exit Confirmation",
+                JOptionPane.YES_NO_OPTION
+        );
+
+        if (choice == JOptionPane.YES_OPTION) {
+            System.exit(0);
+        }
+    }
+}

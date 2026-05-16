@@ -1,0 +1,18 @@
+package Staff;
+
+public class StaffService {
+
+    public static void saveStaff(String id, String name, String email,
+                                 String salary, String gender, String paid) {
+
+        if (id.isEmpty() || name.isEmpty() || email.isEmpty()
+                || salary.isEmpty() || gender.equals("Nothing") || paid.equals("Nothing")) {
+            throw new RuntimeException("All fields required");
+        }
+
+        int staffId = Integer.parseInt(id);
+        double staffSalary = Double.parseDouble(salary);
+
+        StaffRepository.insert(staffId, name, email, gender, staffSalary, paid);
+    }
+}

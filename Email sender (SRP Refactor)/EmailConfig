@@ -1,0 +1,8 @@
+package Mail;
+
+public class EmailConfig {
+
+    public static String getApiKey() {
+        return System.getenv("SENDER_GRID_API_KEY");
+    }
+}

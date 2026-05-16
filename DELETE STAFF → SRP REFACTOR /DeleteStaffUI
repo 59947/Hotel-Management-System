@@ -1,0 +1,23 @@
+package Staff;
+
+import javax.swing.*;
+
+public class DeleteStaffUI {
+
+    public DeleteStaffUI() {
+        JFrame frame = new JFrame("Delete Staff");
+
+        frame.setSize(800, 500);
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        frame.setLayout(null);
+        frame.setLocationRelativeTo(null);
+
+        new DeleteStaffForm(frame);
+
+        frame.setVisible(true);
+    }
+
+    public static void main(String[] args) {
+        new DeleteStaffUI();
+    }
+}

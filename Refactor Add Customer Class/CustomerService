@@ -1,0 +1,8 @@
+package Customer;
+
+public class CustomerService {
+
+    public static void saveCustomer(int id, String name, String email) {
+        CustomerRepository.insertCustomer(id, name, email);
+    }
+}

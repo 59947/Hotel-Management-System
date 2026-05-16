@@ -1,0 +1,28 @@
+package Booking;
+
+import javax.swing.*;
+import java.awt.*;
+
+public class AddBookingUI {
+
+    JFrame frame;
+
+    public AddBookingUI() {
+        frame = new JFrame("Add Booking");
+
+        frame.setSize(800, 500);
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        frame.setLayout(null);
+        frame.setLocationRelativeTo(null);
+
+        frame.getContentPane().setBackground(new Color(51, 0, 51));
+
+        new BookingForm(frame);
+
+        frame.setVisible(true);
+    }
+
+    public static void main(String[] args) {
+        new AddBookingUI();
+    }
+}

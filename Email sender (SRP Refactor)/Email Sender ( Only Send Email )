@@ -1,0 +1,36 @@
+package Mail;
+
+import com.sendgrid.*;
+
+import java.io.IOException;
+
+public class EmailSender {
+
+    private final SendGrid sendGrid;
+
+    public EmailSender(String apiKey) {
+        this.sendGrid = new SendGrid(apiKey);
+    }
+
+    public void send(Mail mail) {
+
+        Request request = new Request();
+
+        try {
+            request.setMethod(Method.POST);
+            request.setEndpoint("mail/send");
+            request.setBody(mail.build());
+
+            Response response = sendGrid.api(request);
+
+            if (response.getStatusCode() >= 200 && response.getStatusCode() < 300) {
+                System.out.println("Email sent successfully!");
+            } else {
+                System.out.println("Failed: " + response.getBody());
+            }
+
+        } catch (IOException ex) {
+            throw new RuntimeException("Email sending failed: " + ex.getMessage());
+        }
+    }
+}

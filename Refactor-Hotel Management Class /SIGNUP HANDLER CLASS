@@ -1,0 +1,19 @@
+package GraphicalUserInterface;
+
+import Manager.signupManager;
+
+import javax.swing.*;
+
+public class SignupHandler {
+
+    private JFrame frame;
+
+    public SignupHandler(JFrame frame) {
+        this.frame = frame;
+    }
+
+    public void open() {
+        frame.dispose();
+        new signupManager();
+    }
+}

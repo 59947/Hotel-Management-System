@@ -1,0 +1,17 @@
+package Mail;
+
+import com.sendgrid.Email;
+import com.sendgrid.Content;
+import com.sendgrid.Mail;
+
+public class EmailBuilder {
+
+    public static Mail build(String toEmail, String subject, String content) {
+
+        Email from = new Email("rana228safi@gmail.com");
+        Email to = new Email(toEmail);
+        Content emailContent = new Content("text/plain", content);
+
+        return new Mail(from, subject, to, emailContent);
+    }
+}

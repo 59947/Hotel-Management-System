@@ -1,0 +1,11 @@
+package Room;
+
+import Database.database;
+
+public class RoomRepository {
+
+    public static void insertRoom(int id, String type) {
+        String query = "INSERT INTO rooms VALUES (" + id + ",'" + type + "')";
+        database.executeWriteQuery(query);
+    }
+}

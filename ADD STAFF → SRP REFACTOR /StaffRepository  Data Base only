@@ -1,0 +1,15 @@
+package Staff;
+
+import Database.database;
+
+public class StaffRepository {
+
+    public static void insert(int id, String name, String email,
+                              String gender, double salary, String paid) {
+
+        String query = "INSERT INTO staff VALUES (" + id + ",'" + name + "','" +
+                email + "','" + gender + "'," + salary + ",'" + paid + "')";
+
+        database.executeWriteQuery(query);
+    }
+}

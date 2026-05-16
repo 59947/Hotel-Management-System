@@ -1,0 +1,17 @@
+package Mail;
+
+import com.sendgrid.Mail;
+
+public class EmailService {
+
+    public static void sendEmail(String toEmail, String subject, String content) {
+
+        String apiKey = EmailConfig.getApiKey();
+
+        EmailSender sender = new EmailSender(apiKey);
+
+        Mail mail = EmailBuilder.build(toEmail, subject, content);
+
+        sender.send(mail);
+    }
+}

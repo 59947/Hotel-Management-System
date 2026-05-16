@@ -1,0 +1,19 @@
+package GraphicalUserInterface;
+
+import javax.swing.*;
+import java.awt.*;
+
+public class BackgroundPanel {
+
+    private JLabel label;
+
+    public BackgroundPanel(JFrame frame) {
+
+        ImageIcon icon = new ImageIcon(getClass().getResource("/cover.jpeg"));
+
+        label = new JLabel(icon);
+        label.setLayout(new BorderLayout());
+
+        frame.add(label, BorderLayout.CENTER);
+    }
+}

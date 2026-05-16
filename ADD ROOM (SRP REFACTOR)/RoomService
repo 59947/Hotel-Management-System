@@ -1,0 +1,8 @@
+package Room;
+
+public class RoomService {
+
+    public static void saveRoom(int id, String type) {
+        RoomRepository.insertRoom(id, type);
+    }
+}

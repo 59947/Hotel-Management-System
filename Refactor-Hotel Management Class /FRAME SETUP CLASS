@@ -1,0 +1,16 @@
+package GraphicalUserInterface;
+
+import javax.swing.*;
+import java.awt.*;
+
+public class FrameSetup {
+
+    public FrameSetup(JFrame frame) {
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setUndecorated(true);
+        frame.setResizable(false);
+        frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        frame.setTitle("Welcome Screen");
+        frame.setLayout(new BorderLayout());
+    }
+}

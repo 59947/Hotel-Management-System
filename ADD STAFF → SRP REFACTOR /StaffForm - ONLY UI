@@ -1,0 +1,49 @@
+package Staff;
+
+import javax.swing.*;
+import java.awt.*;
+
+public class StaffForm {
+
+    JTextField id, name, email, salary;
+    JPanel genderPanel, paidPanel;
+
+    public StaffForm(JFrame frame) {
+
+        id = createField(frame, "Staff ID:", 50);
+        name = createField(frame, "Staff Name:", 100);
+        email = createField(frame, "Staff Email:", 150);
+        salary = createField(frame, "Salary:", 250);
+
+        genderPanel = RadioHelper.create(frame, "Gender:", new String[]{"male", "female"}, 200);
+        paidPanel = RadioHelper.create(frame, "Is Paid:", new String[]{"yes", "no"}, 300);
+
+        JButton btn = new JButton("Submit");
+        btn.setBounds(200, 380, 150, 40);
+        frame.add(btn);
+
+        btn.addActionListener(e -> {
+
+            StaffService.saveStaff(
+                    id.getText(),
+                    name.getText(),
+                    email.getText(),
+                    salary.getText(),
+                    RadioHelper.getSelected(genderPanel),
+                    RadioHelper.getSelected(paidPanel)
+            );
+        });
+    }
+
+    private JTextField createField(JFrame frame, String label, int y) {
+        JLabel l = new JLabel(label);
+        l.setBounds(50, y, 120, 30);
+        frame.add(l);
+
+        JTextField f = new JTextField();
+        f.setBounds(200, y, 200, 30);
+        frame.add(f);
+
+        return f;
+    }
+}

@@ -1,0 +1,13 @@
+package Staff;
+
+public class StaffService {
+
+    public static void deleteStaff(String id) {
+
+        if (id.isEmpty()) throw new RuntimeException("ID required");
+
+        int staffId = Integer.parseInt(id);
+
+        StaffRepository.delete(staffId);
+    }
+}

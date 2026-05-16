@@ -1,0 +1,31 @@
+package Booking;
+
+import Database.database;
+
+import java.sql.ResultSet;
+
+public class BookingRepository {
+
+    public static double getRoomRent(int roomId) {
+        return 1000; // simplified (DB logic here in real system)
+    }
+
+    public static int getCustomerPoints(int customerId) {
+        return 0;
+    }
+
+    public static void saveBooking(int customerId, int roomId, double totalRent) {
+        String query = "INSERT INTO booking VALUES (" + customerId + "," + roomId + "," + totalRent + ")";
+        database.executeWriteQuery(query);
+    }
+
+    public static void updateRoom(int roomId) {
+        String query = "UPDATE rooms SET isAvailable = false WHERE roomId=" + roomId;
+        database.executeWriteQuery(query);
+    }
+
+    public static void updatePoints(int customerId, int points) {
+        String query = "UPDATE customers SET customerPoints=" + points + " WHERE customerId=" + customerId;
+        database.executeWriteQuery(query);
+    }
+}

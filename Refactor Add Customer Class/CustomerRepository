@@ -1,0 +1,11 @@
+package Customer;
+
+import Database.database;
+
+public class CustomerRepository {
+
+    public static void insertCustomer(int id, String name, String email) {
+        String query = "INSERT INTO customers VALUES (" + id + ",'" + name + "','" + email + "')";
+        database.executeWriteQuery(query);
+    }
+}

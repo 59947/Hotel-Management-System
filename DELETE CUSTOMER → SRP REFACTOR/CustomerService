@@ -1,0 +1,13 @@
+package Customer;
+
+public class CustomerService {
+
+    public static void deleteCustomer(String id) {
+
+        if (id.isEmpty()) throw new RuntimeException("ID required");
+
+        int customerId = Integer.parseInt(id);
+
+        CustomerRepository.delete(customerId);
+    }
+}

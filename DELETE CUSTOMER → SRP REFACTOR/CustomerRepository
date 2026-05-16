@@ -1,0 +1,26 @@
+package Customer;
+
+import Database.database;
+
+import java.sql.ResultSet;
+
+public class CustomerRepository {
+
+    public static void delete(int id) {
+
+        try {
+            ResultSet rs = database.executeReadQuery(
+                    "SELECT * FROM customers WHERE customerId=" + id);
+
+            if (rs.next()) {
+                database.executeWriteQuery(
+                        "DELETE FROM customers WHERE customerId=" + id);
+            } else {
+                throw new RuntimeException("Customer not found");
+            }
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+}

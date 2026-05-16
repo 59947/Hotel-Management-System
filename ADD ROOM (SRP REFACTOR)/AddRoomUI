@@ -1,0 +1,22 @@
+package Room;
+
+import javax.swing.*;
+
+public class AddRoomUI {
+
+    public AddRoomUI() {
+        JFrame frame = new JFrame("Add Room");
+        frame.setSize(600, 400);
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        frame.setLayout(null);
+        frame.setLocationRelativeTo(null);
+
+        new RoomForm(frame);
+
+        frame.setVisible(true);
+    }
+
+    public static void main(String[] args) {
+        new AddRoomUI();
+    }
+}

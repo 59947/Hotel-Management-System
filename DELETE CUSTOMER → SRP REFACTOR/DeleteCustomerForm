@@ -1,0 +1,27 @@
+package Customer;
+
+import javax.swing.*;
+
+public class DeleteCustomerForm {
+
+    JTextField idField;
+
+    public DeleteCustomerForm(JFrame frame) {
+
+        JLabel label = new JLabel("Customer ID:");
+        label.setBounds(50, 50, 120, 30);
+        frame.add(label);
+
+        idField = new JTextField();
+        idField.setBounds(200, 50, 200, 30);
+        frame.add(idField);
+
+        JButton btn = new JButton("Delete");
+        btn.setBounds(200, 120, 120, 40);
+        frame.add(btn);
+
+        btn.addActionListener(e -> {
+            CustomerService.deleteCustomer(idField.getText());
+        });
+    }
+}

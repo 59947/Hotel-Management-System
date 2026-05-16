@@ -1,0 +1,23 @@
+package Customer;
+
+import javax.swing.*;
+
+public class DeleteCustomerUI {
+
+    public DeleteCustomerUI() {
+        JFrame frame = new JFrame("Delete Customer");
+
+        frame.setSize(800, 500);
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        frame.setLayout(null);
+        frame.setLocationRelativeTo(null);
+
+        new DeleteCustomerForm(frame);
+
+        frame.setVisible(true);
+    }
+
+    public static void main(String[] args) {
+        new DeleteCustomerUI();
+    }
+}

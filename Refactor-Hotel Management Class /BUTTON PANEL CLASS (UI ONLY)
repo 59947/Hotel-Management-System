@@ -1,0 +1,44 @@
+package GraphicalUserInterface;
+
+import javax.swing.*;
+import java.awt.*;
+
+public class ButtonPanel {
+
+    public ButtonPanel(JFrame frame) {
+
+        JPanel panel = new JPanel();
+        panel.setLayout(null);
+        panel.setOpaque(false);
+
+        JButton login = new JButton("MANAGER LOGIN");
+        JButton signup = new JButton("MANAGER SIGNUP");
+        JButton exit = new JButton("EXIT");
+
+        login.setBounds(100, 700, 200, 60);
+        signup.setBounds(100, 800, 200, 60);
+        exit.setBounds(100, 900, 200, 60);
+
+        styleButton(login);
+        styleButton(signup);
+        styleButton(exit);
+
+        login.addActionListener(e -> new LoginHandler(frame).open());
+        signup.addActionListener(e -> new SignupHandler(frame).open());
+        exit.addActionListener(e -> new ExitHandler().exit());
+
+        panel.add(login);
+        panel.add(signup);
+        panel.add(exit);
+
+        frame.add(panel);
+    }
+
+    private void styleButton(JButton btn) {
+        btn.setFont(new Font("Arial", Font.BOLD, 18));
+        btn.setBackground(new Color(190, 183, 223));
+        btn.setForeground(new Color(52, 17, 63));
+        btn.setFocusable(false);
+        btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+    }
+}

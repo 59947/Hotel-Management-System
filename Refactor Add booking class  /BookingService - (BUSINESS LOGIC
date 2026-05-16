@@ -1,0 +1,38 @@
+package Booking;
+
+import Database.database;
+import InvoicesReports.invoiceGeneration;
+import Mail.emailSender;
+
+import java.util.Date;
+
+public class BookingService {
+
+    public void createBooking(int customerId, int roomId) {
+
+        double roomRent = BookingRepository.getRoomRent(roomId);
+        int points = BookingRepository.getCustomerPoints(customerId);
+
+        double totalRent = roomRent; // simplified logic
+
+        BookingRepository.saveBooking(customerId, roomId, totalRent);
+
+        BookingRepository.updateRoom(roomId);
+        BookingRepository.updatePoints(customerId, points);
+
+        emailSender.sendEmail("test@gmail.com", "Booking Done", "Success");
+
+        invoiceGeneration.invoiceGenerate(
+                "Customer",
+                "email",
+                String.valueOf(customerId),
+                String.valueOf(roomId),
+                totalRent,
+                points,
+                new Date(),
+                new Date(),
+                1,
+                roomRent
+        );
+    }
+}

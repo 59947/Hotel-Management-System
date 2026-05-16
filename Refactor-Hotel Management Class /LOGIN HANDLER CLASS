@@ -1,0 +1,19 @@
+package GraphicalUserInterface;
+
+import Manager.loginManager;
+
+import javax.swing.*;
+
+public class LoginHandler {
+
+    private JFrame frame;
+
+    public LoginHandler(JFrame frame) {
+        this.frame = frame;
+    }
+
+    public void open() {
+        frame.dispose();
+        new loginManager();
+    }
+}

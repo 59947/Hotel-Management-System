@@ -1,0 +1,48 @@
+package Customer;
+
+import javax.swing.*;
+import java.awt.*;
+
+public class CustomerForm {
+
+    JTextField id, name, email;
+
+    public CustomerForm(JFrame frame) {
+
+        JLabel l1 = new JLabel("ID:");
+        l1.setBounds(50, 50, 100, 30);
+        frame.add(l1);
+
+        id = new JTextField();
+        id.setBounds(200, 50, 200, 30);
+        frame.add(id);
+
+        JLabel l2 = new JLabel("Name:");
+        l2.setBounds(50, 100, 100, 30);
+        frame.add(l2);
+
+        name = new JTextField();
+        name.setBounds(200, 100, 200, 30);
+        frame.add(name);
+
+        JLabel l3 = new JLabel("Email:");
+        l3.setBounds(50, 150, 100, 30);
+        frame.add(l3);
+
+        email = new JTextField();
+        email.setBounds(200, 150, 200, 30);
+        frame.add(email);
+
+        JButton btn = new JButton("Save");
+        btn.setBounds(200, 250, 120, 40);
+        frame.add(btn);
+
+        btn.addActionListener(e -> {
+            CustomerService.saveCustomer(
+                    Integer.parseInt(id.getText()),
+                    name.getText(),
+                    email.getText()
+            );
+        });
+    }
+}

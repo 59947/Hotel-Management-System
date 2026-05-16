@@ -1,0 +1,34 @@
+package Staff;
+
+import Database.database;
+
+import java.sql.ResultSet;
+
+public class StaffRepository {
+
+    public static void insert(int id, String name, String email,
+                              String gender, double salary, String paid) {
+
+        String query = "INSERT INTO staff VALUES (" + id + ",'" + name + "','" +
+                email + "','" + gender + "'," + salary + ",'" + paid + "')";
+        database.executeWriteQuery(query);
+    }
+
+    public static void delete(int id) {
+
+        try {
+            ResultSet rs = database.executeReadQuery(
+                    "SELECT * FROM staff WHERE staffId=" + id);
+
+            if (rs.next()) {
+                database.executeWriteQuery(
+                        "DELETE FROM staff WHERE staffId=" + id);
+            } else {
+                throw new RuntimeException("Staff not found");
+            }
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+}

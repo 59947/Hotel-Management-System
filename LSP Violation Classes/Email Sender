@@ -1,0 +1,160 @@
+                                                                              Messy Code:
+
+
+package Mail;
+
+import com.sendgrid.*;
+
+import java.io.IOException;
+
+public class emailSender {
+    private final String apiKey;
+
+    public emailSender(String apiKey) {
+        this.apiKey = apiKey;
+    }
+
+    public void emailConfigurations(String toEmail, String subject, String content) {
+        Email from = new Email("rana228safi@gmail.com");
+        Email to = new Email(toEmail);
+        Content emailContent = new Content("text/plain", content);
+        Mail mail = new Mail(from, subject, to, emailContent);
+
+        SendGrid sg = new SendGrid(apiKey);
+        Request request = new Request();
+
+        try {
+            request.setMethod(Method.POST);
+            request.setEndpoint("mail/send");
+            request.setBody(mail.build());
+
+            Response response = sg.api(request);
+            System.out.println("Status Code: " + response.getStatusCode());
+
+            if (response.getStatusCode() >= 200 && response.getStatusCode() < 300) {
+                System.out.println("Email sent successfully!");
+            } else {
+                System.out.println("Failed to send email. Body: " + response.getBody());
+            }
+
+        } catch (IOException ex) {
+            System.err.println("Error sending email: " + ex.getMessage());
+            ex.printStackTrace();
+        }
+    }
+
+    public static void sendEmail(String toEmail, String subject, String content) {
+        String apiKey = System.getenv("SENDER_GRID_API_KEY");
+        emailSender emailService = new emailSender(apiKey);
+        emailService.emailConfigurations(toEmail, subject, content);
+    }
+
+
+
+                                                                            REFACTORED CODE
+                                                                            Parent Interface
+package Mail;
+
+public interface EmailService {
+
+    void sendEmail(String toEmail, String subject, String content);
+
+}
+                                                                             Child Class — SendGridEmailSender
+package Mail;
+
+import com.sendgrid.*;
+
+import java.io.IOException;
+
+public class SendGridEmailSender implements EmailService {
+
+    private final String apiKey;
+
+    public SendGridEmailSender(String apiKey) {
+        this.apiKey = apiKey;
+    }
+
+    @Override
+    public void sendEmail(String toEmail, String subject, String content) {
+
+        Email from = new Email("rana228safi@gmail.com");
+        Email to = new Email(toEmail);
+
+        Content emailContent = new Content("text/plain", content);
+
+        Mail mail = new Mail(from, subject, to, emailContent);
+
+        SendGrid sg = new SendGrid(apiKey);
+
+        Request request = new Request();
+
+        try {
+
+            request.setMethod(Method.POST);
+            request.setEndpoint("mail/send");
+            request.setBody(mail.build());
+
+            Response response = sg.api(request);
+
+            System.out.println("Status Code: " + response.getStatusCode());
+
+            if (response.getStatusCode() >= 200 &&
+                    response.getStatusCode() < 300) {
+
+                System.out.println("Email sent successfully!");
+
+            } else {
+
+                System.out.println("Failed to send email.");
+
+            }
+
+        } catch (IOException ex) {
+
+            System.out.println(ex.getMessage());
+
+        }
+    }
+}
+                                                                              Another Child Class — MockEmailSender
+
+Used for testing.
+
+package Mail;
+
+public class MockEmailSender implements EmailService {
+
+    @Override
+    public void sendEmail(String toEmail, String subject, String content) {
+
+        System.out.println("Fake Email Sent");
+        System.out.println("To: " + toEmail);
+        System.out.println("Subject: " + subject);
+        System.out.println("Content: " + content);
+
+    }
+}
+                                                                                 Main Class Usage
+package Mail;
+
+public class Main {
+
+    public static void main(String[] args) {
+
+        EmailService emailService;
+
+        String apiKey = System.getenv("SENDER_GRID_API_KEY");
+
+        emailService = new SendGridEmailSender(apiKey);
+
+        emailService.sendEmail(
+                "abc@gmail.com",
+                "Welcome",
+                "Hello User"
+        );
+
+    }
+}
+
+}

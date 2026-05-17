@@ -1,0 +1,383 @@
+                                                                                AddBooking
+
+package Booking;
+
+import Common.BaseForm;
+import Common.DatabaseService;
+
+import javax.swing.*;
+import java.awt.*;
+import java.sql.ResultSet;
+
+public class AddBooking extends BaseForm {
+
+    private JComboBox<Integer> roomBox;
+    private JLabel priceLabel;
+
+    public AddBooking() {
+
+        super("Add Booking",800,500);
+
+        JPanel panel = new JPanel();
+        panel.setBackground(new Color(48,17,63));
+
+        roomBox = new JComboBox<>();
+
+        try {
+
+            ResultSet rs =
+                    DatabaseService.executeRead(
+                            "SELECT * FROM rooms");
+
+            while(rs.next()) {
+                roomBox.addItem(rs.getInt("roomId"));
+            }
+
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+
+        priceLabel = createLabel("0");
+
+        JButton button =
+                createButton("Calculate");
+
+        button.addActionListener(e -> calculatePrice());
+
+        panel.add(roomBox);
+        panel.add(priceLabel);
+        panel.add(button);
+
+        add(panel);
+        setVisible(true);
+    }
+
+    private void calculatePrice() {
+
+        String roomType = "Single";
+
+        RoomPricingStrategy strategy =
+                RoomFactory.getRoom(roomType);
+
+        double price = strategy.calculatePrice();
+
+        priceLabel.setText("Rs. " + price);
+    }
+}
+
+
+                                                                                        AddCustomer
+
+package Customer;
+
+import Common.BaseForm;
+import Common.DatabaseService;
+
+import javax.swing.*;
+import java.awt.*;
+
+public class AddCustomer extends BaseForm {
+
+    public AddCustomer() {
+
+        super("Add Customer",800,500);
+
+        JPanel panel = new JPanel();
+
+        JTextField idField = createTextField();
+        JTextField nameField = createTextField();
+
+        JButton submit =
+                createButton("Submit");
+
+        submit.addActionListener(e -> {
+
+            String query =
+                    "INSERT INTO customers VALUES("
+                            + idField.getText()
+                            + ",'"
+                            + nameField.getText()
+                            + "')";
+
+            DatabaseService.executeInsert(query);
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Customer Added"
+            );
+        });
+
+        panel.add(idField);
+        panel.add(nameField);
+        panel.add(submit);
+
+        add(panel);
+
+        setVisible(true);
+    }
+}
+
+                                                                               AddRoom
+
+package Room;
+
+import Common.BaseForm;
+import Common.DatabaseService;
+
+import javax.swing.*;
+
+public class AddRoom extends BaseForm {
+
+    public AddRoom() {
+
+        super("Add Room",800,500);
+
+        JTextField roomId =
+                createTextField();
+
+        JComboBox<String> type =
+                new JComboBox<>(
+                        new String[]{
+                                "Single",
+                                "Double",
+                                "Suite"
+                        });
+
+        JButton submit =
+                createButton("Submit");
+
+        submit.addActionListener(e -> {
+
+            String query =
+                    "INSERT INTO rooms(roomId,roomType)"
+                            + " VALUES("
+                            + roomId.getText()
+                            + ",'"
+                            + type.getSelectedItem()
+                            + "')";
+
+            DatabaseService.executeInsert(query);
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Room Added"
+            );
+        });
+
+        JPanel panel = new JPanel();
+
+        panel.add(roomId);
+        panel.add(type);
+        panel.add(submit);
+
+        add(panel);
+
+        setVisible(true);
+    }
+}  
+
+                                                                      AddStaff
+
+package Staff;
+
+import Common.BaseForm;
+import Common.DatabaseService;
+
+import javax.swing.*;
+
+public class AddStaff extends BaseForm {
+
+    public AddStaff() {
+
+        super("Add Staff",800,500);
+
+        JTextField id =
+                createTextField();
+
+        JTextField name =
+                createTextField();
+
+        JButton submit =
+                createButton("Submit");
+
+        submit.addActionListener(e -> {
+
+            String query =
+                    "INSERT INTO staff(staffId,staffName)"
+                            + " VALUES("
+                            + id.getText()
+                            + ",'"
+                            + name.getText()
+                            + "')";
+
+            DatabaseService.executeInsert(query);
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Staff Added"
+            );
+        });
+
+        JPanel panel = new JPanel();
+
+        panel.add(id);
+        panel.add(name);
+        panel.add(submit);
+
+        add(panel);
+
+        setVisible(true);
+    }
+} 
+
+                                                                                    DeleteCustomer
+
+package Customer;
+
+import Common.BaseForm;
+import Common.DatabaseService;
+
+import javax.swing.*;
+
+public class DeleteCustomer extends BaseForm {
+
+    public DeleteCustomer() {
+
+        super("Delete Customer",500,300);
+
+        JTextField id =
+                createTextField();
+
+        JButton delete =
+                createButton("Delete");
+
+        delete.addActionListener(e -> {
+
+            String query =
+                    "DELETE FROM customers WHERE customerId="
+                            + id.getText();
+
+            DatabaseService.executeInsert(query);
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Deleted Successfully"
+            );
+        });
+
+        JPanel panel = new JPanel();
+
+        panel.add(id);
+        panel.add(delete);
+
+        add(panel);
+
+        setVisible(true);
+    }
+} 
+
+
+                                                                                   DeleteStaff
+
+package Staff;
+
+import Common.BaseForm;
+import Common.DatabaseService;
+
+import javax.swing.*;
+
+public class DeleteStaff extends BaseForm {
+
+    public DeleteStaff() {
+
+        super("Delete Staff",500,300);
+
+        JTextField id =
+                createTextField();
+
+        JButton delete =
+                createButton("Delete");
+
+        delete.addActionListener(e -> {
+
+            String query =
+                    "DELETE FROM staff WHERE staffId="
+                            + id.getText();
+
+            DatabaseService.executeInsert(query);
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Deleted Successfully"
+            );
+        });
+
+        JPanel panel = new JPanel();
+
+        panel.add(id);
+        panel.add(delete);
+
+        add(panel);
+
+        setVisible(true);
+    }
+}  
+
+
+                                                                                    EmailService
+
+package Mail;
+
+public interface EmailService {
+
+    void send(String to,
+              String subject,
+              String body);
+}
+
+
+
+                                                                                   SendGridEmailService
+
+package Mail;
+
+public class SendGridEmailService
+        implements EmailService {
+
+    @Override
+    public void send(String to,
+                     String subject,
+                     String body) {
+
+        System.out.println(
+                "Email Sent Successfully");
+    }
+}
+
+
+  
+                                                                                          HotelManagementSystem
+
+
+package GUI;
+
+import javax.swing.*;
+
+public class HotelManagementSystem {
+
+    public static void main(String[] args) {
+
+        SwingUtilities.invokeLater(() -> {
+
+            JFrame frame =
+                    new JFrame("Hotel System");
+
+            frame.setSize(800,500);
+
+            frame.setDefaultCloseOperation(
+                    JFrame.EXIT_ON_CLOSE);
+
+            frame.setVisible(true);
+        });
+    }
+}

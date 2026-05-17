@@ -1,0 +1,524 @@
+                                                                  mainInvoiceReports  ( Messy Code )
+
+package InvoicesReports;
+
+import GraphicalUserInterface.setupGUIafter;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+public class mainInvoiceReports {
+    public mainInvoiceReports() {
+        setupGUIafter app = new setupGUIafter("INVOICES & REPORTS");
+
+        // Main Panel with BorderLayout
+        JPanel mainPanel = new JPanel();
+        mainPanel.setLayout(new BorderLayout());
+        mainPanel.setBackground(new Color(33, 26, 30));
+
+        JLabel mainLabel = new JLabel("<html><div style='padding-top: 20px'>INVOICE OPTIONS</div></html>");
+        mainLabel.setFont(new Font("Noto Sans Mono", Font.BOLD, 38));
+        mainLabel.setHorizontalAlignment(JLabel.CENTER);
+        mainLabel.setForeground(Color.white);
+
+        JPanel buttonMainPanel = new JPanel();
+        buttonMainPanel.setOpaque(false);
+        buttonMainPanel.setLayout(new BoxLayout(buttonMainPanel, BoxLayout.Y_AXIS));
+
+        buttonMainPanel.setBorder(BorderFactory.createEmptyBorder(350, 150, 0, 0));
+
+        String[] values = new String[]{"VIEW INVOICES", "VIEW REPORTS"};
+        for (String value : values) {
+            JButton button = getJButton(value);
+            buttonMainPanel.add(button);
+            buttonMainPanel.add(Box.createVerticalStrut(10));
+        }
+
+        JPanel imagePanel = new JPanel();
+        imagePanel.setOpaque(false);
+        imagePanel.setLayout(new BorderLayout());
+        JLabel imageLabel = new JLabel();
+        ImageIcon imageIcon = new ImageIcon(getClass().getResource("/invoice.png"));
+        imagePanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 150));
+        imageLabel.setIcon(imageIcon);
+        imagePanel.add(imageLabel, BorderLayout.CENTER);
+
+        mainPanel.add(mainLabel, BorderLayout.NORTH);
+        mainPanel.add(buttonMainPanel, BorderLayout.WEST);
+        mainPanel.add(imagePanel, BorderLayout.EAST);
+
+        SwingUtilities.invokeLater(() -> app.setCenterPanel(mainPanel));
+    }
+
+    private static JButton getJButton(String value) {
+        JButton button = new JButton(value);
+        button.setMaximumSize(new Dimension(400, 80));
+        button.setFocusable(false);
+        button.setBackground(new Color(190, 183, 223));
+        button.setForeground(new Color(33, 26, 30));
+        button.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        button.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
+        button.setFont(new Font("Noto Sans Mono", Font.BOLD, 22));
+
+        button.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                button.setBackground(new Color(220, 220, 220));
+            }
+
+            @Override
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                button.setBackground(new Color(190, 183, 223));
+            }
+        });
+
+        button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (e.getActionCommand().equals("VIEW INVOICES")) {
+                    new viewInvoices();
+                }else {
+                    new viewReports();
+                }
+            }
+        });
+
+        button.setContentAreaFilled(false);
+        button.setOpaque(true);
+        return button;
+    }
+
+    public static void main(String[] args) {
+        new mainInvoiceReports();
+    }
+
+}
+
+
+
+                                                                                Invoice Generate ( Messy Code)
+
+
+
+
+package InvoicesReports;
+
+import com.itextpdf.text.*;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
+
+import java.io.FileOutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+public class invoiceGeneration {
+
+    public static void invoiceGenerate(String customerName, String customerEmail, String customerId, String roomId, double totalRent, int loyaltyPoints, Date checkInDate, Date checkOutDate, long duration, double roomRentPerNight) {
+        try {
+            // Create the PDFs directory if it doesn't exist
+            Path pdfDirectory = Paths.get("PDFs");
+            if (!Files.exists(pdfDirectory)) {
+                Files.createDirectories(pdfDirectory);
+            }
+
+            // Generate the invoice file path
+            String timestamp = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
+            String invoiceFileName = customerName.replace(" ", "_") + "-" + roomId + "-Invoice-" + timestamp + ".pdf";
+            String invoicePath = pdfDirectory.resolve(invoiceFileName).toString();
+
+            // Create the PDF document
+            Document document = new Document();
+            PdfWriter.getInstance(document, new FileOutputStream(invoicePath));
+            document.open();
+
+            // Add Title
+            Font titleFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 24, BaseColor.BLACK);
+            Paragraph title = new Paragraph("Hello World HMS", titleFont);
+            title.setAlignment(Element.ALIGN_CENTER);
+            document.add(title);
+
+            document.add(new Paragraph("\n")); // Spacer
+
+            // Add Subtitle
+            Font subtitleFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 16, BaseColor.DARK_GRAY);
+            Paragraph subtitle = new Paragraph("Guest Invoice", subtitleFont);
+            subtitle.setAlignment(Element.ALIGN_CENTER);
+            document.add(subtitle);
+
+            document.add(new Paragraph("\n"));
+
+            // Create Table
+            PdfPTable table = new PdfPTable(2); // Two-column table
+            table.setWidthPercentage(100);
+            table.setSpacingBefore(10f);
+            table.setSpacingAfter(10f);
+
+            Font headerFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 12, BaseColor.WHITE);
+            PdfPCell header1 = new PdfPCell(new Phrase("Description", headerFont));
+            header1.setBackgroundColor(BaseColor.GRAY);
+            header1.setHorizontalAlignment(Element.ALIGN_CENTER);
+            PdfPCell header2 = new PdfPCell(new Phrase("Details", headerFont));
+            header2.setBackgroundColor(BaseColor.GRAY);
+            header2.setHorizontalAlignment(Element.ALIGN_CENTER);
+
+            table.addCell(header1);
+            table.addCell(header2);
+
+            // Determine room type
+            String roomType = roomRentPerNight == 1000 ? "Single" : roomRentPerNight == 2000 ? "Double" : "Suite";
+            double grossRent = duration * roomRentPerNight;
+
+            // Add Table Rows
+            table.addCell("Guest Name");
+            table.addCell(customerName);
+
+            table.addCell("Guest Email");
+            table.addCell(customerEmail);
+
+            table.addCell("Guest ID");
+            table.addCell(customerId);
+
+            table.addCell("Room ID");
+            table.addCell(roomId);
+
+            table.addCell("Room Type");
+            table.addCell(roomType);
+
+            table.addCell("Check-in Date");
+            table.addCell(new SimpleDateFormat("EEE, MMM dd, yyyy").format(checkInDate));
+
+            table.addCell("Check-out Date");
+            table.addCell(new SimpleDateFormat("EEE, MMM dd, yyyy").format(checkOutDate));
+
+            table.addCell("Room Rent/Night");
+            table.addCell(String.format("Rs. %.2f", roomRentPerNight));
+
+            table.addCell("Duration (days)");
+            table.addCell(String.valueOf(duration));
+
+            table.addCell("Gross Total Rent");
+            table.addCell(String.format("Rs. %.2f", grossRent));
+
+            table.addCell("Discounted Total Rent (After Loyalty Points)");
+            table.addCell(String.format("Rs. %.2f", totalRent));
+
+            table.addCell("Available Loyalty Points");
+            table.addCell(String.valueOf(loyaltyPoints));
+
+            document.add(table);
+
+            // Add Footer
+            Font footerFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 14, BaseColor.DARK_GRAY);
+            Paragraph footer = new Paragraph("You have to Pay: Rs. " + totalRent + "\nThank you for staying with us!", footerFont);
+            footer.setAlignment(Element.ALIGN_CENTER);
+            footer.setSpacingBefore(20);
+            document.add(footer);
+
+            document.close();
+
+            System.out.println("Invoice generated successfully: " + invoicePath);
+
+        } catch (Exception e) {
+            System.err.println("Error generating invoice: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+}
+
+
+
+
+                                                                           View Invoice ( Messy Code ) 
+
+
+
+package InvoicesReports;
+
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
+import javax.swing.table.TableCellRenderer;
+import java.awt.*;
+import java.io.File;
+import java.text.SimpleDateFormat;
+
+public class viewInvoices {
+
+    public viewInvoices() {
+        JFrame frame = new JFrame("View Invoices");
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        frame.setSize(1000, 500);
+        frame.setResizable(false);
+        frame.setLocationRelativeTo(null);
+
+        // Directory to display files
+        String invoicePath = "PDFs";
+        File directory = new File(invoicePath);
+        File[] files = directory.listFiles();
+
+        DefaultTableModel model = getDefaultTableModel();
+
+
+        if (files != null) {
+            SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+            int index = 1;
+            for (int i = files.length - 1; i >= 0; i--) {
+                File file = files[i];
+                Object[] row = {index++, file.getName(), sdf.format(file.lastModified())};
+                model.addRow(row);
+            }
+
+        }
+
+        JTable table = new JTable(model) {
+            @Override
+            public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
+                Component component = super.prepareRenderer(renderer, row, column);
+                if (isRowSelected(row)) {
+                    component.setBackground(new Color(190, 183, 223)); // Soft purple background
+                } else {
+                    component.setBackground(Color.WHITE); // Pure white background for cells
+                }
+                return component;
+            }
+        };
+        table.getTableHeader().setReorderingAllowed(false); // Prevent column reordering
+
+        // Table Header Styling
+        JTableHeader header = table.getTableHeader();
+        header.setBackground(new Color(52, 17, 63));
+        header.setForeground(Color.WHITE);
+        header.setFont(new Font("", Font.BOLD, 16));
+
+        // Table Styling
+        table.setRowHeight(35);
+        table.setFont(new Font("", Font.PLAIN, 14));
+
+        // Add Table to Scroll Pane
+        JScrollPane scrollPane = new JScrollPane(table);
+        scrollPane.setBorder(BorderFactory.createMatteBorder(0, 0, 3, 0, new Color(52, 17, 63))); // border
+        scrollPane.getViewport().setBackground(new Color(52, 17, 63));
+
+
+        // Add action listener to open file when clicked
+        table.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                int row = table.rowAtPoint(evt.getPoint());
+                if (row >= 0) {
+                    String fileName = table.getValueAt(row, 1).toString();
+                    File selectedFile = new File(directory, fileName);
+                    try {
+                        Desktop.getDesktop().open(selectedFile);
+                    } catch (Exception e) {
+                        JOptionPane.showMessageDialog(frame, "Error opening file: " + e.getMessage());
+                    }
+                }
+            }
+        });
+
+        frame.add(scrollPane, BorderLayout.CENTER);
+
+        frame.setVisible(true);
+    }
+
+    // Default Table Model
+    private static DefaultTableModel getDefaultTableModel() {
+        return new DefaultTableModel(new String[]{"#", "Name", "Date & Time"}, 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false; // Makes all cells non-editable
+            }
+        };
+    }
+
+    public static void main(String[] args) {
+        new viewInvoices();
+    }
+}
+
+
+
+
+
+                                                                                  View Report ( Messy Code)
+
+
+
+package InvoicesReports;
+
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
+import javax.swing.table.TableCellRenderer;
+import java.awt.*;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+import static Database.database.connectDB;
+
+public class viewReports {
+
+    public viewReports() {
+        JFrame frame = new JFrame("View Reports");
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        frame.setSize(1000, 500);
+        frame.setResizable(false);
+        frame.setLocationRelativeTo(null);
+
+        DefaultTableModel model = getDefaultTableModel();
+
+        // Fetch data from the database
+        int totalGains = 0;
+        int totalExpenditures = 0;
+        try (Connection conn = connectDB(); Statement stmt = conn.createStatement()) {
+            // Gains
+            ResultSet rs = stmt.executeQuery("SELECT SUM(totalRent) AS total_gains FROM booking");
+            if (rs.next()) {
+                totalGains = rs.getInt("total_gains");
+            }
+
+            // Expenditures
+            rs = stmt.executeQuery("SELECT SUM(staffSalary) AS total_expenditures FROM staff WHERE staffPaid = 'yes'");
+            if (rs.next()) {
+                totalExpenditures = rs.getInt("total_expenditures");
+            }
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(frame, "Error fetching data from the database: " + e.getMessage());
+        }
+
+        // Add the data to the table model
+        Object[] row = {"Total Gains", "Rs. " + totalGains};
+        model.addRow(row);
+        row = new Object[]{"Total Expenditures", "Rs. " + totalExpenditures};
+        model.addRow(row);
+
+        // Calculate Net Result (Profit or Loss)
+        int netResult = totalGains - totalExpenditures;
+
+        JTable table = new JTable(model) {
+            @Override
+            public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
+                Component component = super.prepareRenderer(renderer, row, column);
+                if (isRowSelected(row)) {
+                    component.setBackground(new Color(190, 183, 223)); // Soft purple background
+                } else {
+                    component.setBackground(Color.WHITE); // Pure white background for cells
+                }
+                return component;
+            }
+        };
+
+        // Prevent column reordering
+        table.getTableHeader().setReorderingAllowed(false);
+
+        // Table Header Styling
+        JTableHeader header = table.getTableHeader();
+        header.setBackground(new Color(52, 17, 63));
+        header.setForeground(Color.WHITE);
+        header.setFont(new Font("", Font.BOLD, 16));
+
+        // Table Styling
+        table.setRowHeight(35);
+        table.setFont(new Font("", Font.PLAIN, 14));
+
+        // Add Table to Scroll Pane
+        JScrollPane scrollPane = new JScrollPane(table);
+        scrollPane.setBorder(BorderFactory.createMatteBorder(0, 0, 3, 0, new Color(52, 17, 63))); // Border
+        scrollPane.getViewport().setBackground(new Color(52, 17, 63));
+
+        // Create a panel for the Net Result at the bottom
+        JPanel netResultPanel = getResultPanel(netResult);
+
+        // Adding components to the frame
+        frame.add(scrollPane, BorderLayout.CENTER);
+        frame.add(netResultPanel, BorderLayout.SOUTH);
+
+        frame.setVisible(true);
+    }
+
+    private static JPanel getResultPanel(int netResult) {
+        JPanel netResultPanel = new JPanel();
+        netResultPanel.setLayout(new BorderLayout());
+        netResultPanel.setBackground(new Color(52, 17, 63));
+
+        String netResultText = "<html><span style='color:white;'>Net Result: Rs. </span>" + "<span style='color:" + (netResult < 0 ? "red" : "green") + "; font-size:22px;'>" + netResult + "</span></html>";
+
+        JLabel netResultLabel = new JLabel(netResultText, JLabel.CENTER);
+        netResultLabel.setFont(new Font("", Font.BOLD, 25));
+
+        netResultPanel.add(netResultLabel, BorderLayout.CENTER);
+
+        return netResultPanel;
+    }
+
+
+    // Default Table Model
+    private static DefaultTableModel getDefaultTableModel() {
+        return new DefaultTableModel(new String[]{"Description", "Amount"}, 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false; // Makes all cells non-editable
+            }
+        };
+    }
+
+    public static void main(String[] args) {
+        new viewReports();
+    }
+}
+
+
+
+                                                                                      Refactor Code: 
+
+
+ReportViewer.java
+package InvoicesReports;
+
+public interface ReportViewer {
+
+    void display();
+
+}
+
+
+                                                                                      REFACTOR viewInvoices
+
+package InvoicesReports;
+
+public class viewInvoices implements ReportViewer {
+
+    @Override
+    public void display() {
+
+        new viewInvoices();
+
+    }
+}
+
+
+
+                                                                                      REFACTOR viewReports
+
+package InvoicesReports;
+
+public class viewReports implements ReportViewer {
+
+    @Override
+    public void display() {
+
+        new viewReports();
+
+    }
+}
+
+

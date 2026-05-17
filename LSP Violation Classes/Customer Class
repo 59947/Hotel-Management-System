@@ -1,0 +1,113 @@
+                                                                          addCustomer ( Messy Code)
+
+
+
+public class addCustomer {
+
+    public addCustomer() {
+
+        // GUI code
+
+        JButton submitButton = new JButton("Submit");
+
+        submitButton.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                // validation
+
+                String customerIdString = idField.getText();
+
+                // database query
+
+                String query =
+                "INSERT INTO customers VALUES(...)";
+
+                database.executeWriteQuery(query);
+
+                // success message
+
+                JOptionPane.showMessageDialog(frame,
+                        "Customer Added");
+            }
+        });
+    }
+}
+
+
+
+
+                                                                             Refactor Code: 
+
+package Customer;
+
+import Database.database;
+
+public class CustomerService {
+
+    public void addCustomer(
+            int id,
+            String name,
+            String email,
+            String gender) {
+
+        String query =
+                "INSERT INTO customers " +
+                "(customerId, customerName, customerEmail, customerGender) " +
+                "VALUES (" +
+                id + ", '" +
+                name + "', '" +
+                email + "', '" +
+                gender + "')";
+
+        database.executeWriteQuery(query);
+    }
+}
+
+
+
+
+                                                                                   REFACTOR  (addCustomer)
+
+
+package Customer;
+
+import javax.swing.*;
+
+public class addCustomer {
+
+    private CustomerService service;
+
+    public addCustomer() {
+
+        service = new CustomerService();
+
+        JButton submitButton = new JButton("Submit");
+
+        submitButton.addActionListener(e -> {
+
+            int id = 1;
+            String name = "Ali";
+            String email = "ali@gmail.com";
+            String gender = "male";
+
+            // service handles database work
+            service.addCustomer(
+                    id,
+                    name,
+                    email,
+                    gender
+            );
+
+            JOptionPane.showMessageDialog(
+                    null,
+                    "Customer Added"
+            );
+        });
+    }
+}
+
+
+
+

@@ -1,0 +1,32 @@
+package Common;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+
+public class ButtonStyler {
+
+    public static void style(JButton button) {
+
+        Color normal = new Color(190,183,223);
+        Color hover = new Color(230,230,250);
+
+        button.setBackground(normal);
+        button.setForeground(new Color(48,17,63));
+        button.setFocusPainted(false);
+
+        button.addMouseListener(new MouseAdapter() {
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                button.setBackground(hover);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                button.setBackground(normal);
+            }
+        });
+    }
+}

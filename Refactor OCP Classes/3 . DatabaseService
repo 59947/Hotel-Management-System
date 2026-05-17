@@ -1,0 +1,15 @@
+package Common;
+
+import Database.database;
+import java.sql.ResultSet;
+
+public class DatabaseService {
+
+    public static void executeInsert(String query) {
+        database.executeWriteQuery(query);
+    }
+
+    public static ResultSet executeRead(String query) {
+        return database.executeReadQuery(query);
+    }
+}

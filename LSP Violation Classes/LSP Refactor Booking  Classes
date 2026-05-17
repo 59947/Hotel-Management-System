@@ -1,0 +1,228 @@
+
+                                                                  1️⃣ ADD BOOKING CLASS  ( Messy Code ) 
+  
+
+
+package Booking;
+
+public class addBooking {
+
+    public addBooking() {
+
+        System.out.println("Add Booking");
+
+        // GUI Code
+        // Database Code
+        // Email Code
+        // Invoice Code
+    }
+}
+
+
+                                                                     ✅ Refactor Code
+                                                                         Parent Class
+package Booking;
+
+public abstract class BookingOperation {
+
+    public abstract void execute();
+
+}
+
+
+
+
+
+                                                                        Child Class
+package Booking;
+
+public class addBooking extends BookingOperation {
+
+    @Override
+    public void execute() {
+
+        System.out.println("Adding Booking");
+
+    }
+}
+
+BookingOperation op = new addBooking();
+
+op.execute();
+
+
+
+                                                                       2️⃣ DELETE BOOKING CLASS ( Messy Code )
+package Booking;
+
+public class deleteBooking {
+
+    public deleteBooking() {
+
+        System.out.println("Delete Booking");
+
+        // Delete Logic
+        // Room Available Logic
+    }
+}
+
+                                                                              ✅ Refactor Code
+                                                                                 Parent Class
+
+
+
+package Booking;
+
+public abstract class BookingOperation {
+
+    public abstract void execute();
+
+}
+ 
+
+                                                                                                Child Class
+
+
+package Booking;
+
+public class deleteBooking extends BookingOperation {
+
+    @Override
+    public void execute() {
+
+        System.out.println("Deleting Booking");
+
+    }
+}
+
+BookingOperation op = new deleteBooking();
+
+op.execute();
+
+
+                                                                                                SEARCH BOOKINGS CLASS( Messy Code)
+package Booking;
+
+public class searchBookings {
+
+    public searchBookings() {
+
+        System.out.println("Search Booking");
+
+        // Search Logic
+    }
+}
+
+
+
+
+                                                                                                ✅ Refactor Code
+                                                                                                    Parent Class
+package Booking;
+
+public abstract class BookingOperation {
+
+    public abstract void execute();
+
+}
+                                                                                                     Child Class
+
+
+package Booking;
+
+public class searchBookings extends BookingOperation {
+
+    @Override
+    public void execute() {
+
+        System.out.println("Searching Booking");
+
+    }
+}
+
+
+BookingOperation op = new searchBookings();
+
+op.execute();
+
+
+                                                                                       VIEW BOOKINGS CLASS ( Messy Code)
+package Booking;
+
+public class viewBookings {
+
+    public viewBookings() {
+
+        System.out.println("View Booking");
+
+        // JTable Logic
+        // Database Fetch Logic
+    }
+}
+
+
+
+
+
+                                                                                    ✅ Refactor Code
+                                                                                        Parent Class
+package Booking;
+
+public abstract class BookingOperation {
+
+    public abstract void execute();
+
+}
+                                                                                       Child Class
+package Booking;
+
+public class viewBookings extends BookingOperation {
+
+    @Override
+    public void execute() {
+
+        System.out.println("Viewing Bookings");
+
+    }
+}
+
+BookingOperation op = new viewBookings();
+
+op.execute();
+
+
+
+
+                                                                                          5️⃣ MAIN BOOKING CLASS  (Messy Code)
+new addBooking();
+
+new deleteBooking();
+
+new searchBookings();
+
+new viewBookings();
+
+
+
+
+                                                                                          ✅ Refactor Code
+package Booking;
+
+public class mainBooking {
+
+    public static void main(String[] args) {
+
+        BookingOperation op1 = new addBooking();
+
+        BookingOperation op2 = new deleteBooking();
+
+        BookingOperation op3 = new searchBookings();
+
+        BookingOperation op4 = new viewBookings();
+
+        op1.execute();
+        op2.execute();
+        op3.execute();
+        op4.execute();
+    }
+}

@@ -1,0 +1,227 @@
+                                                                      1. LOGIN MANAAGER ( MESSY CODE) (ISP VIOLATION)
+public class LoginManager {
+
+    public void login(String email, String password) {
+
+        String query = "SELECT * FROM manager WHERE managerEmail='" 
+                + email + "' AND managerPassword='" + password + "'";
+
+        try {
+            ResultSet rs = database.executeReadQuery(query);
+
+            if (rs.next()) {
+
+                String name = rs.getString("managerName");
+
+                emailSender.sendEmail(email, "Login Alert",
+                        "Welcome " + name);
+
+                new Dashboard();
+            }
+
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+}
+
+
+                                                                                      Interfaces
+
+
+interface AuthDB {
+    ResultSet loginQuery(String email, String password);
+}
+
+
+
+interface EmailNotifier {
+    void sendLoginEmail(String email, String message);
+}
+
+                            
+
+                                                                 Refactored Class
+public class LoginManager {
+
+    private AuthDB authDB;
+    private EmailNotifier emailNotifier;
+
+    public LoginManager(AuthDB authDB, EmailNotifier emailNotifier) {
+        this.authDB = authDB;
+        this.emailNotifier = emailNotifier;
+    }
+
+    public void login(String email, String password) {
+
+        try {
+            ResultSet rs = authDB.loginQuery(email, password);
+
+            if (rs.next()) {
+
+                String name = rs.getString("managerName");
+
+                emailNotifier.sendLoginEmail(email,
+                        "Welcome " + name);
+
+                new Dashboard();
+            }
+
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+}
+
+
+
+
+
+                                                                 2. DELETE STAFF ( MESSY CODE )
+public class DeleteStaff {
+
+    public void delete(int id) {
+
+        try {
+            ResultSet rs = database.executeReadQuery(
+                    "SELECT * FROM staff WHERE staffId=" + id);
+
+            if (rs.next()) {
+                database.executeWriteQuery(
+                        "DELETE FROM staff WHERE staffId=" + id);
+            }
+
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+}
+
+
+                                                                    REFACTORED (ONLY ISP)
+                                                                      🔹 Interface
+interface StaffDB {
+    boolean exists(int id);
+    void delete(int id);
+}
+
+
+
+
+                                                                            🔹 Class Delete Staff ( Refactor) 
+public class DeleteStaff {
+
+    private StaffDB staffDB;
+
+    public DeleteStaff(StaffDB staffDB) {
+        this.staffDB = staffDB;
+    }
+
+    public void delete(int id) {
+
+        if (staffDB.exists(id)) {
+            staffDB.delete(id);
+        }
+    }
+}
+
+
+
+
+
+                                                                         3. SEARCH STAFF ( MESSY CODE)
+public class SearchStaff {
+
+    public void search(int id) {
+
+        try {
+            ResultSet rs = database.executeReadQuery(
+                    "SELECT * FROM staff WHERE staffId=" + id);
+
+            if (rs.next()) {
+                System.out.println(rs.getString("staffName"));
+                System.out.println(rs.getString("staffEmail"));
+            }
+
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+}
+
+
+
+                                                                             ✅ REFACTORED 🔹 Interface
+   
+
+interface StaffSearchDB {
+    ResultSet findById(int id);
+}
+  
+
+
+
+                                                                                🔹 Class Search Staff ( Refactor ) 
+public class SearchStaff {
+
+    private StaffSearchDB staffSearchDB;
+
+    public SearchStaff(StaffSearchDB staffSearchDB) {
+        this.staffSearchDB = staffSearchDB;
+    }
+
+    public void search(int id) {
+
+        try {
+            ResultSet rs = staffSearchDB.findById(id);
+
+            if (rs.next()) {
+                System.out.println(rs.getString("staffName"));
+                System.out.println(rs.getString("staffEmail"));
+            }
+
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+}
+
+
+
+
+                                                                                    SIGNUP MANAGER ( MESSY CODE )
+public class SignupManager {
+
+    public void signup(String name, String email, String password) {
+
+        String query = "INSERT INTO manager VALUES('" 
+                + name + "','" + password + "','" + email + "')";
+
+        database.executeWriteQuery(query);
+    }
+}
+                                                                                         🔹 Interface
+interface ManagerDB {
+    void insert(String name, String email, String password);
+}
+                                                                                          
+
+
+
+                                                                                          🔹 Class
+public class SignupManager {
+
+    private ManagerDB managerDB;
+
+    public SignupManager(ManagerDB managerDB) {
+        this.managerDB = managerDB;
+    }
+
+    public void signup(String name, String email, String password) {
+        managerDB.insert(name, email, password);
+    }
+}
+
+
+
+

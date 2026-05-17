@@ -1,0 +1,62 @@
+                                                                                   SingleRoom:
+
+package Booking;
+
+public class SingleRoom implements RoomPricingStrategy {
+
+    @Override
+    public double calculatePrice() {
+        return 1000;
+    }
+}
+
+
+                                                                                   DoubleRoom
+
+package Booking;
+
+public class DoubleRoom implements RoomPricingStrategy {
+
+    @Override
+    public double calculatePrice() {
+        return 2000;
+    }
+}
+
+                                                                                     SuiteRoom
+
+package Booking;
+
+public class SuiteRoom implements RoomPricingStrategy {
+
+    @Override
+    public double calculatePrice() {
+        return 3500;
+    }
+}  
+
+                                                                                      RoomFactory
+
+package Booking;
+
+public class RoomFactory {
+
+    public static RoomPricingStrategy getRoom(String type) {
+
+        switch (type) {
+
+            case "Single":
+                return new SingleRoom();
+
+            case "Double":
+                return new DoubleRoom();
+
+            case "Suite":
+                return new SuiteRoom();
+
+            default:
+                throw new IllegalArgumentException("Invalid Room Type");
+        }
+    }
+}
+

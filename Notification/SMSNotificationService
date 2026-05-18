@@ -1,0 +1,19 @@
+package Notification;
+
+public class SMSNotificationService implements INotificationService {
+
+    @Override
+    public void sendNotification(String recipientContact, String subject, String message) {
+        // In production: integrate Twilio or Vonage SMS API here
+        // For this academic project: simulate and log to console
+        System.out.println("[SMSNotificationService] SMS sent to: " + recipientContact);
+        System.out.println("[SMSNotificationService] Subject: " + subject);
+        System.out.println("[SMSNotificationService] Message preview: " + message.substring(0, Math.min(80, message.length())) + "...");
+        System.out.println("[SMSNotificationService] SMS delivered successfully.");
+    }
+
+    @Override
+    public String getNotificationType() {
+        return "SMS";
+    }
+}

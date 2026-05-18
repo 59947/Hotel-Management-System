@@ -1,0 +1,13 @@
+                                                                       Discount Strategy
+
+
+package Discount;
+
+public interface DiscountStrategy {
+
+    // Calculates and returns the final price after discount
+    double applyDiscount(double originalPrice, int loyaltyPoints, long durationDays);
+
+    // Human-readable name shown in invoice and success dialog
+    String getDiscountName();
+}

@@ -1,0 +1,32 @@
+package Maintenance;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+public class MaintenanceRequest {
+
+    private final int roomId;
+    private final IMaintenanceTask task;
+    private final Date requestDate;
+    private String status;
+
+    public MaintenanceRequest(int roomId, IMaintenanceTask task) {
+        this.roomId = roomId;
+        this.task = task;
+        this.requestDate = new Date();
+        this.status = "Pending";
+    }
+
+    public int getRoomId() { return roomId; }
+    public IMaintenanceTask getTask() { return task; }
+    public Date getRequestDate() { return requestDate; }
+    public String getStatus() { return status; }
+    public void setStatus(String status) { this.status = status; }
+
+    @Override
+    public String toString() {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy, hh:mm a");
+        return "Room #" + roomId + " | " + task.getTaskType()
+                + " | " + status + " | Rs." + task.getEstimatedCost()
+                + " | " + sdf.format(requestDate);
+    }

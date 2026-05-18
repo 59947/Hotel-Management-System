@@ -1,0 +1,18 @@
+                                                                       LoyaltyDiscount
+
+
+package Discount;
+
+public class LoyaltyDiscount implements DiscountStrategy {
+
+    @Override
+    public double applyDiscount(double originalPrice, int loyaltyPoints, long durationDays) {
+        double discounted = originalPrice - loyaltyPoints;
+        return Math.max(discounted, 0.0); // price cannot go below zero
+    }
+
+    @Override
+    public String getDiscountName() {
+        return "Loyalty Points Discount";
+    }
+}

@@ -1,0 +1,8 @@
+package Maintenance;
+
+public interface IMaintenanceTask {
+    String getTaskType();       // "Cleaning", "Repair", "Inspection"
+    int getEstimatedHours();    // hours to complete
+    double getEstimatedCost();  // cost in Rs.
+    String getDescription();    // full description of work
+}

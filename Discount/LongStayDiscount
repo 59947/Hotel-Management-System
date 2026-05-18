@@ -1,0 +1,23 @@
+package Discount;
+
+public class LongStayDiscount implements DiscountStrategy {
+
+    @Override
+    public double applyDiscount(double originalPrice, int loyaltyPoints, long durationDays) {
+        double discounted = originalPrice;
+
+        if (durationDays >= 14) {
+            discounted = originalPrice * 0.85; // 15% off for 14+ nights
+        } else if (durationDays >= 7) {
+            discounted = originalPrice * 0.90; // 10% off for 7+ nights
+        }
+
+        discounted = discounted - loyaltyPoints;
+        return Math.max(discounted, 0.0);
+    }
+
+    @Override
+    public String getDiscountName() {
+        return "Long Stay Discount (7+ nights: 10% off, 14+ nights: 15% off)";
+    }
+}

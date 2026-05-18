@@ -1,0 +1,38 @@
+package Discount;
+
+import java.util.Calendar;
+import java.util.Date;
+
+public class SeasonalDiscount implements DiscountStrategy {
+
+    private final Date checkInDate;
+
+    public SeasonalDiscount(Date checkInDate) {
+        this.checkInDate = checkInDate;
+    }
+
+    @Override
+    public double applyDiscount(double originalPrice, int loyaltyPoints, long durationDays) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(checkInDate);
+        int month = cal.get(Calendar.MONTH); // 0-indexed
+
+        boolean isPeakSeason = (month == Calendar.JUNE ||
+                month == Calendar.JULY ||
+                month == Calendar.AUGUST ||
+                month == Calendar.DECEMBER);
+
+        double discounted = originalPrice;
+        if (!isPeakSeason) {
+            discounted = originalPrice * 0.80; // 20% off in off-peak
+        }
+
+        discounted = discounted - loyaltyPoints;
+        return Math.max(discounted, 0.0);
+    }
+
+    @Override
+    public String getDiscountName() {
+        return "Seasonal Discount (20% off in off-peak months)";
+    }
+}

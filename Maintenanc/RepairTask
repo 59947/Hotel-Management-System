@@ -1,0 +1,10 @@
+package Maintenance;
+
+public class RepairTask implements IMaintenanceTask {
+    @Override public String getTaskType() { return "Repair"; }
+    @Override public int getEstimatedHours() { return 4; }
+    @Override public double getEstimatedCost() { return 2000.0; }
+    @Override public String getDescription() {
+        return "Room repair: fixing furniture, plumbing checks, electrical inspection, AC servicing.";
+    }
+}

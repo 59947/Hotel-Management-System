@@ -1,0 +1,10 @@
+package Notification;
+
+public interface INotificationService {
+
+    // Send a notification to the recipient
+    void sendNotification(String recipientContact, String subject, String message);
+
+    // Returns the channel type name e.g. "Email", "SMS"
+    String getNotificationType();
+}

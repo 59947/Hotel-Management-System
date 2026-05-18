@@ -1,0 +1,10 @@
+package Maintenance;
+
+public class InspectionTask implements IMaintenanceTask {
+    @Override public String getTaskType() { return "Inspection"; }
+    @Override public int getEstimatedHours() { return 1; }
+    @Override public double getEstimatedCost() { return 200.0; }
+    @Override public String getDescription() {
+        return "Quality inspection: check room condition, test all appliances, verify cleanliness, approve for re-booking.";
+    }
+}

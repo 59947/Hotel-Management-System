@@ -1,0 +1,10 @@
+package Maintenance;
+
+public class CleaningTask implements IMaintenanceTask {
+    @Override public String getTaskType() { return "Cleaning"; }
+    @Override public int getEstimatedHours() { return 2; }
+    @Override public double getEstimatedCost() { return 500.0; }
+    @Override public String getDescription() {
+        return "Full room cleaning: linen change, vacuuming, bathroom sanitization, restocking amenities.";
+    }
+}

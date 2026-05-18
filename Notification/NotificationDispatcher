@@ -1,0 +1,39 @@
+package Notification;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class NotificationDispatcher {
+
+    private final List<INotificationService> channels = new ArrayList<>();
+
+    // Register a notification channel (Email, SMS, etc.)
+    public void registerChannel(INotificationService service) {
+        channels.add(service);
+    }
+
+    // Send notification through ALL registered channels
+    public void dispatch(String recipientContact, String subject, String message) {
+        if (channels.isEmpty()) {
+            System.out.println("[NotificationDispatcher] WARNING: No channels registered.");
+            return;
+        }
+        for (INotificationService channel : channels) {
+            try {
+                channel.sendNotification(recipientContact, subject, message);
+                System.out.println("[NotificationDispatcher] Sent via " + channel.getNotificationType());
+            } catch (Exception e) {
+                // One channel failing does NOT stop the others
+                System.err.println("[NotificationDispatcher] Failed on " + channel.getNotificationType() + ": " + e.getMessage());
+            }
+        }
+    }
+
+    // Factory: creates dispatcher with Email + SMS channels ready
+    public static NotificationDispatcher createDefault() {
+        NotificationDispatcher dispatcher = new NotificationDispatcher();
+        dispatcher.registerChannel(new EmailNotificationService());
+        dispatcher.registerChannel(new SMSNotificationService());
+        return dispatcher;
+    }
+}

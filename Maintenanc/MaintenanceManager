@@ -1,0 +1,165 @@
+  package Maintenance;
+
+import Database.database;
+
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
+import javax.swing.table.TableCellRenderer;
+import java.awt.*;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+public class MaintenanceManager {
+
+    private static final List<MaintenanceRequest> requestLog = new ArrayList<>();
+
+    public MaintenanceManager() {
+        JFrame frame = new JFrame("Room Maintenance Manager");
+        frame.setSize(900, 600);
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        frame.setResizable(false);
+        frame.setLocationRelativeTo(null);
+        frame.setLayout(null);
+        frame.getContentPane().setBackground(new Color(51, 0, 51));
+
+        JLabel titleLabel = new JLabel("Room Maintenance Manager");
+        titleLabel.setBounds(50, 20, 500, 40);
+        titleLabel.setFont(new Font("Noto Sans Mono", Font.BOLD, 22));
+        titleLabel.setForeground(Color.WHITE);
+        frame.add(titleLabel);
+
+        JLabel roomLabel = new JLabel("Room ID:");
+        roomLabel.setBounds(50, 80, 150, 30);
+        roomLabel.setFont(new Font("", Font.BOLD, 16));
+        roomLabel.setForeground(Color.WHITE);
+        frame.add(roomLabel);
+
+        JComboBox<Integer> roomComboBox = new JComboBox<>();
+        roomComboBox.setBounds(200, 80, 200, 35);
+        roomComboBox.setBackground(new Color(204, 204, 255));
+        roomComboBox.setForeground(new Color(51, 0, 51));
+        roomComboBox.setFont(new Font("", Font.PLAIN, 15));
+        loadRoomIds(roomComboBox, frame);
+        frame.add(roomComboBox);
+
+        JLabel taskLabel = new JLabel("Task Type:");
+        taskLabel.setBounds(50, 130, 150, 30);
+        taskLabel.setFont(new Font("", Font.BOLD, 16));
+        taskLabel.setForeground(Color.WHITE);
+        frame.add(taskLabel);
+
+        String[] taskOptions = {"Cleaning", "Repair", "Inspection"};
+        JComboBox<String> taskComboBox = new JComboBox<>(taskOptions);
+        taskComboBox.setBounds(200, 130, 200, 35);
+        taskComboBox.setBackground(new Color(204, 204, 255));
+        taskComboBox.setForeground(new Color(51, 0, 51));
+        taskComboBox.setFont(new Font("", Font.PLAIN, 15));
+        frame.add(taskComboBox);
+
+        JLabel infoLabel = new JLabel("Select task to see details...");
+        infoLabel.setBounds(420, 105, 420, 60);
+        infoLabel.setFont(new Font("", Font.PLAIN, 13));
+        infoLabel.setForeground(new Color(190, 183, 223));
+        frame.add(infoLabel);
+
+        taskComboBox.addActionListener(e -> {
+            IMaintenanceTask t = buildTask((String) taskComboBox.getSelectedItem());
+            infoLabel.setText("<html>" + t.getDescription()
+                    + "<br>Est. Time: " + t.getEstimatedHours() + " hrs | Cost: Rs. " + t.getEstimatedCost() + "</html>");
+        });
+
+        IMaintenanceTask init = buildTask((String) taskComboBox.getSelectedItem());
+        infoLabel.setText("<html>" + init.getDescription()
+                + "<br>Est. Time: " + init.getEstimatedHours() + " hrs | Cost: Rs. " + init.getEstimatedCost() + "</html>");
+
+        JButton submitBtn = new JButton("Submit Maintenance Request");
+        submitBtn.setBounds(50, 185, 300, 40);
+        submitBtn.setFont(new Font("", Font.BOLD, 15));
+        submitBtn.setBackground(new Color(204, 204, 255));
+        submitBtn.setForeground(new Color(51, 0, 51));
+        submitBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        submitBtn.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent e) { submitBtn.setBackground(Color.WHITE); }
+            public void mouseExited(java.awt.event.MouseEvent e) { submitBtn.setBackground(new Color(204, 204, 255)); }
+        });
+        frame.add(submitBtn);
+
+        String[] cols = {"Room ID","Task Type","Description","Est. Hours","Cost (Rs.)","Status","Requested At"};
+        DefaultTableModel tableModel = new DefaultTableModel(cols, 0) {
+            @Override public boolean isCellEditable(int r, int c) { return false; }
+        };
+
+        JTable table = new JTable(tableModel) {
+            @Override
+            public Component prepareRenderer(TableCellRenderer renderer, int row, int col) {
+                Component c = super.prepareRenderer(renderer, row, col);
+                c.setBackground(isRowSelected(row) ? new Color(190, 183, 223) : Color.WHITE);
+                return c;
+            }
+        };
+        table.setRowHeight(30);
+        table.setFont(new Font("", Font.PLAIN, 13));
+        table.getTableHeader().setReorderingAllowed(false);
+        JTableHeader header = table.getTableHeader();
+        header.setBackground(new Color(52, 17, 63));
+        header.setForeground(Color.WHITE);
+        header.setFont(new Font("", Font.BOLD, 13));
+
+        JScrollPane scrollPane = new JScrollPane(table);
+        scrollPane.setBounds(50, 245, 800, 300);
+        scrollPane.setBorder(BorderFactory.createMatteBorder(2, 2, 2, 2, new Color(204, 204, 255)));
+        frame.add(scrollPane);
+
+        submitBtn.addActionListener(e -> {
+            if (roomComboBox.getItemCount() == 0) {
+                JOptionPane.showMessageDialog(frame, "No rooms available.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            int roomId = (Integer) roomComboBox.getSelectedItem();
+            IMaintenanceTask task = buildTask((String) taskComboBox.getSelectedItem());
+            MaintenanceRequest request = new MaintenanceRequest(roomId, task);
+            requestLog.add(request);
+
+            SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy, hh:mm a");
+            tableModel.addRow(new Object[]{
+                    request.getRoomId(), task.getTaskType(), task.getDescription(),
+                    task.getEstimatedHours() + " hrs", "Rs. " + task.getEstimatedCost(),
+                    request.getStatus(), sdf.format(request.getRequestDate())
+            });
+
+            JOptionPane.showMessageDialog(frame,
+                    "Maintenance request submitted!\nRoom: " + roomId
+                            + "\nTask: " + task.getTaskType()
+                            + "\nCost: Rs. " + task.getEstimatedCost()
+                            + "\nTime: " + task.getEstimatedHours() + " hours\nStatus: Pending",
+                    "Request Submitted", JOptionPane.INFORMATION_MESSAGE);
+        });
+
+        frame.setVisible(true);
+    }
+
+    private IMaintenanceTask buildTask(String name) {
+        switch (name) {
+            case "Repair":     return new RepairTask();
+            case "Inspection": return new InspectionTask();
+            default:           return new CleaningTask();
+        }
+    }
+
+    private void loadRoomIds(JComboBox<Integer> comboBox, JFrame frame) {
+        try {
+            ResultSet rs = database.executeReadQuery("SELECT roomId FROM rooms");
+            while (rs.next()) { comboBox.addItem(rs.getInt("roomId")); }
+        } catch (RuntimeException | SQLException e) {
+            JOptionPane.showMessageDialog(frame, "Error loading rooms: " + e.getMessage(),
+                    "Database Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    public static void main(String[] args) { new MaintenanceManager(); }
+}

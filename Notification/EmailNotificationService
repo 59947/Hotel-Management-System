@@ -1,0 +1,18 @@
+package Notification;
+
+import Mail.emailSender;
+
+public class EmailNotificationService implements INotificationService {
+
+    @Override
+    public void sendNotification(String recipientContact, String subject, String message) {
+        // Delegates to the existing emailSender — emailSender.java is NOT modified
+        emailSender.sendEmail(recipientContact, subject, message);
+        System.out.println("[EmailNotificationService] Email sent to: " + recipientContact);
+    }
+
+    @Override
+    public String getNotificationType() {
+        return "Email";
+    }
+}
